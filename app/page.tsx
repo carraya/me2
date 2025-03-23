@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col pt-6 sm:pt-8 md:pt-12 px-4 sm:px-8 md:px-12">
@@ -30,6 +32,87 @@ export default function Home() {
           LINKEDIN
         </a>
       </div>
-    </main>
+
+      {/* Three images in a row with border top and bottom */}
+      <div className="w-full mt-12 sm:mt-16 md:mt-20 lg:mt-24 relative">
+        {/* Top full-width dotted line container */}
+        <div className="full-width-border"></div>
+
+        {/* Image grid container */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-8 mb-8">
+          {/* UNC Image */}
+          <div className="relative flex flex-col">
+            <div className="relative aspect-square sm:aspect-[4/3] overflow-hidden rounded-sm location-image-container">
+              <Image
+                src="/unc.png"
+                alt="UNC Chapel Hill campus"
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                className="object-cover"
+              />
+              <div className="location-hover-text">CH</div>
+              <div className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: `
+                       radial-gradient(ellipse at center, transparent 90%, var(--background) 100%),
+                       linear-gradient(to top, var(--background), transparent 10%, transparent 90%, var(--background)),
+                       linear-gradient(to left, var(--background), transparent 10%, transparent 90%, var(--background))
+                     `
+                }}>
+              </div>
+            </div>
+          </div>
+
+          {/* Golden Gate Image */}
+          <div className="relative flex flex-col">
+            <div className="relative aspect-square sm:aspect-[4/3] overflow-hidden rounded-sm location-image-container">
+              <Image
+                src="/goldengate.png"
+                alt="Golden Gate Bridge above the clouds"
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                className="object-cover"
+              />
+              <div className="location-hover-text">SF</div>
+              <div className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: `
+                       radial-gradient(ellipse at center, transparent 90%, var(--background) 100%),
+                       linear-gradient(to top, var(--background), transparent 10%, transparent 90%, var(--background)),
+                       linear-gradient(to left, var(--background), transparent 10%, transparent 90%, var(--background))
+                     `
+                }}>
+              </div>
+            </div>
+          </div>
+
+          {/* NYC Image */}
+          <div className="relative flex flex-col">
+            <div className="relative aspect-square sm:aspect-[4/3] overflow-hidden rounded-sm location-image-container">
+              <Image
+                src="/nyc.png"
+                alt="New York City skyline"
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                className="object-cover"
+              />
+              <div className="location-hover-text">NYC</div>
+              <div className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: `
+                       radial-gradient(ellipse at center, transparent 90%, var(--background) 100%),
+                       linear-gradient(to top, var(--background), transparent 10%, transparent 90%, var(--background)),
+                       linear-gradient(to left, var(--background), transparent 10%, transparent 90%, var(--background))
+                     `
+                }}>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom full-width dotted line container */}
+        <div className="full-width-border bottom-0"></div>
+      </div>
+    </main >
   );
 }

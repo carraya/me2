@@ -8,7 +8,7 @@ interface TrailSegment {
   endX: number;
   endY: number;
   timestamp: number;
-  id: number; // Add unique ID for more stable keys
+  id: number;
 }
 
 export default function CustomCursor() {
@@ -18,28 +18,75 @@ export default function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
   const [visible, setVisible] = useState(false);
   const [trailSegments, setTrailSegments] = useState<TrailSegment[]>([]);
+  const [isTouchDevice, setIsTouchDevice] = useState(true); // Default to true until we check
 
   // Refs for performance optimization
   const lastPointTimeRef = useRef(0);
   const lastPointPositionRef = useRef({ x: 0, y: 0 });
   const animationFrameRef = useRef<number | null>(null);
-  const segmentIdCounterRef = useRef(0); // Counter for unique IDs
-  const trailSegmentsRef = useRef<TrailSegment[]>([]); // Reference to current segments
+  const rotationFrameRef = useRef<number | null>(null);
+  const segmentIdCounterRef = useRef(0);
+  const trailSegmentsRef = useRef<TrailSegment[]>([]);
+  const interactiveElementsRef = useRef<Element[]>([]);
+  const prevAngleRef = useRef<number | null>(null);
 
-  // Trail settings - optimized
+  // Trail settings
   const trailLifetime = 3000; // 3 seconds in milliseconds
   const pointInterval = 30; // Create points every 30ms for smooth trails
   const maxSegments = 20; // Limit maximum number of segments
 
-  // Update ref whenever state changes
+  // Check if we're on a touch device - Run once on mount
+  useEffect(() => {
+    // Detect touch device
+    const isTouch = 'ontouchstart' in window ||
+      navigator.maxTouchPoints > 0;
+
+    setIsTouchDevice(isTouch);
+
+    // Only setup mouse tracking if not a touch device
+    if (isTouch) {
+      return;
+    }
+
+    document.body.style.cursor = 'none';
+  }, []); // Empty dependency array - run once on mount
+
+  // Update ref whenever trail segments change
   useEffect(() => {
     trailSegmentsRef.current = trailSegments;
   }, [trailSegments]);
 
+  // Memoized handle hover function to prevent recreating on each render
+  const handleMouseEnter = useCallback(() => {
+    setIsHovering(true);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setIsHovering(false);
+  }, []);
+
+  // Memoized handler for interactivity - separated from useEffect
+  const setupInteractiveElements = useCallback(() => {
+    // First, clean up any existing event listeners
+    interactiveElementsRef.current.forEach(el => {
+      el.removeEventListener("mouseenter", handleMouseEnter);
+      el.removeEventListener("mouseleave", handleMouseLeave);
+    });
+
+    // Get interactive elements and store in ref
+    const elements = document.querySelectorAll("a, button, input, select, textarea");
+    interactiveElementsRef.current = Array.from(elements);
+
+    // Add new event listeners
+    interactiveElementsRef.current.forEach(el => {
+      el.addEventListener("mouseenter", handleMouseEnter);
+      el.addEventListener("mouseleave", handleMouseLeave);
+    });
+  }, [handleMouseEnter, handleMouseLeave]);
+
   // Memoized handler for mouse movement
   const handleMouseMove = useCallback((e: MouseEvent) => {
     const now = Date.now();
-    // Use clientX/clientY for consistent positioning with fixed elements
     const newPosition = { x: e.clientX, y: e.clientY };
 
     // Always update position for cursor
@@ -107,67 +154,120 @@ export default function CustomCursor() {
     animationFrameRef.current = requestAnimationFrame(cleanupTrail);
   }, [trailLifetime]);
 
+  // Main setup effect - only runs when dependencies actually change
   useEffect(() => {
-    // Create cursor SVG
-    const paperAirplaneSVG = `
-      <svg width="24" height="24" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.20308 1.04312C1.00481 0.954998 0.772341 1.0048 0.627577 1.16641C0.482813 1.32802 0.458794 1.56455 0.568117 1.75196L3.92115 7.50002L0.568117 13.2481C0.458794 13.4355 0.482813 13.672 0.627577 13.8336C0.772341 13.9952 1.00481 14.045 1.20308 13.9569L14.7031 7.95693C14.8836 7.87668 15 7.69762 15 7.50002C15 7.30243 14.8836 7.12337 14.7031 7.04312L1.20308 1.04312ZM4.84553 7.10002L2.21234 2.586L13.2689 7.50002L2.21234 12.414L4.84552 7.90002H9C9.22092 7.90002 9.4 7.72094 9.4 7.50002C9.4 7.27911 9.22092 7.10002 9 7.10002H4.84553Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" stroke="currentColor" stroke-width="0.2"></path></svg>
-    `;
-
-    const cursor = document.getElementById("paper-airplane-cursor");
-    if (cursor) {
-      cursor.innerHTML = paperAirplaneSVG;
+    // If we're on a touch device, don't set up the cursor at all
+    if (isTouchDevice) {
+      return;
     }
 
-    // Handle interactivity on elements
-    const handleInteractiveElements = () => {
-      const interactiveElements = document.querySelectorAll("a, button, input, select, textarea");
+    // Set up interactive elements
+    setupInteractiveElements();
 
-      interactiveElements.forEach((el) => {
-        el.addEventListener("mouseenter", () => {
-          setIsHovering(true);
-        });
+    // Initialize event listeners
+    document.addEventListener("mousemove", handleMouseMove);
 
-        el.addEventListener("mouseleave", () => {
-          setIsHovering(false);
-        });
+    // Start cleanup trail animation frame
+    requestAnimationFrame(cleanupTrail);
+
+    // Cleanup function - remove all event listeners
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+
+      // Remove all interactive element listeners
+      interactiveElementsRef.current.forEach(el => {
+        el.removeEventListener("mouseenter", handleMouseEnter);
+        el.removeEventListener("mouseleave", handleMouseLeave);
       });
+
+      // Cancel any animation frames
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
+
+      if (rotationFrameRef.current) {
+        cancelAnimationFrame(rotationFrameRef.current);
+        rotationFrameRef.current = null;
+      }
+    };
+  }, [isTouchDevice, handleMouseMove, cleanupTrail, setupInteractiveElements, handleMouseEnter, handleMouseLeave]);
+
+  // Separate effect for handling rotation updates
+  useEffect(() => {
+    if (isTouchDevice || !visible) return;
+
+    // Helper function to normalize angle between -180 and 180
+    const normalizeAngle = (angle: number): number => {
+      // Convert to range -180 to 180
+      while (angle > 180) angle -= 360;
+      while (angle < -180) angle += 360;
+      return angle;
     };
 
-    // Calculate rotation based on movement
+    // Calculate rotation based on movement with smoothing
     const updateRotation = () => {
       if (position.x !== prevPosition.x || position.y !== prevPosition.y) {
         const deltaX = position.x - prevPosition.x;
         const deltaY = position.y - prevPosition.y;
 
+        // Increase threshold for bottom-left detection to reduce jitter
+        const isBottomLeft = deltaX < 0 && deltaY > 0;
+        const movementThreshold = isBottomLeft ? 2 : 0.5;
+
         // Only update rotation if there's significant movement
-        if (Math.abs(deltaX) > 1 || Math.abs(deltaY) > 1) {
-          const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-          setRotation(angle);
+        if (Math.abs(deltaX) > movementThreshold || Math.abs(deltaY) > movementThreshold) {
+          // Calculate new angle
+          const newAngle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+
+          // Apply smoothing
+          if (prevAngleRef.current !== null) {
+            // Get normalized angles to handle -180/180 boundary correctly
+            const normalizedPrevAngle = normalizeAngle(prevAngleRef.current);
+            const normalizedNewAngle = normalizeAngle(newAngle);
+
+            // Calculate the smallest delta between angles
+            let angleDelta = normalizedNewAngle - normalizedPrevAngle;
+            if (Math.abs(angleDelta) > 180) {
+              // Take the shortest path
+              angleDelta = angleDelta > 0 ? angleDelta - 360 : angleDelta + 360;
+            }
+
+            // Limit maximum rotation per frame (prevents spinning)
+            const maxRotationPerFrame = 15; // max degrees change per frame
+            const limitedDelta = Math.max(-maxRotationPerFrame,
+              Math.min(maxRotationPerFrame, angleDelta));
+
+            // Apply limited change
+            const smoothedAngle = normalizeAngle(normalizedPrevAngle + limitedDelta);
+            setRotation(smoothedAngle);
+            prevAngleRef.current = smoothedAngle;
+          } else {
+            // First angle calculation
+            setRotation(newAngle);
+            prevAngleRef.current = newAngle;
+          }
+
           setPrevPosition({ x: position.x, y: position.y });
         }
       }
 
-      requestAnimationFrame(updateRotation);
+      rotationFrameRef.current = requestAnimationFrame(updateRotation);
     };
 
-    // Initialize event listeners
-    document.addEventListener("mousemove", handleMouseMove);
-    handleInteractiveElements();
+    // Start rotation animation frame
+    rotationFrameRef.current = requestAnimationFrame(updateRotation);
 
-    // Start the animation frame loop for cleanup
-    animationFrameRef.current = requestAnimationFrame(cleanupTrail);
-    requestAnimationFrame(updateRotation);
-
-    // Cleanup
     return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
+      if (rotationFrameRef.current) {
+        cancelAnimationFrame(rotationFrameRef.current);
+        rotationFrameRef.current = null;
       }
     };
-  }, [handleMouseMove, cleanupTrail, position, prevPosition]);
+  }, [isTouchDevice, visible, position, prevPosition]);
 
-  if (!visible) return null;
+  // If it's a touch device or cursor isn't visible, don't render anything
+  if (isTouchDevice || !visible) return null;
 
   return (
     <>
@@ -209,15 +309,23 @@ export default function CustomCursor() {
       {/* Cursor */}
       <div
         id="paper-airplane-cursor"
-        className="fixed pointer-events-none z-[9999] text-[#353534]"
+        className="fixed pointer-events-none z-[9999]"
         style={{
           left: `${position.x}px`,
           top: `${position.y}px`,
           transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
-          transition: "transform 0.1s ease",
+          transition: "transform 0.08s ease-out",
+          width: "32px",
+          height: "32px",
+          transformOrigin: "center center",
         }}
         data-hovering={isHovering ? "true" : "false"}
-      ></div>
+      >
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="2,2 22,12 2,22 8,12" fill="white" stroke="#353534" strokeWidth="1.2" />
+          <line x1="16" y1="12" x2="8" y2="12" stroke="#353534" strokeWidth="1.2" />
+        </svg>
+      </div>
     </>
   );
 } 

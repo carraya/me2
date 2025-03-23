@@ -13,25 +13,43 @@
   /* Increased footer height */
 }
 
-/* Custom cursor styling */
-body {
-  cursor: none;
-}
+/* Custom cursor styling - only for non-touch devices */
+@media (hover: hover) and (pointer: fine) {
+  body {
+    cursor: none;
+  }
 
-a,
-button,
-input,
-select,
-textarea {
-  cursor: none;
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    cursor: none;
+  }
 }
 
 #paper-airplane-cursor {
-  /* Base styles handled in component */
+  z-index: 9999 !important;
 }
 
-#paper-airplane-cursor[data-hovering="true"] path:first-child {
-  fill: #353534;
+#paper-airplane-cursor svg {
+  display: block;
+}
+
+#paper-airplane-cursor polygon {
+  fill: white;
+  stroke: #353534;
+  stroke-width: 1.2px;
+}
+
+#paper-airplane-cursor line {
+  stroke: #353534;
+  stroke-width: 1.2px;
+}
+
+#paper-airplane-cursor[data-hovering="true"] polygon,
+#paper-airplane-cursor[data-hovering="true"] line {
+  stroke-width: 1.8px;
 }
 
 body {
@@ -192,7 +210,63 @@ body {
   animation: fadeOut 3s forwards;
 }
 
-/* Make sure the cursor styles remain at the top priority */
-#paper-airplane-cursor {
-  z-index: 9999 !important;
+/* Golden Gate image border line */
+.full-width-border {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: var(--border-width);
+  border-top: var(--border-width) dashed var(--border-color);
+  z-index: 10;
+}
+
+.full-width-border.bottom-0 {
+  top: auto;
+  bottom: 0;
+  border-top: none;
+  border-bottom: var(--border-width) dashed var(--border-color);
+}
+
+/* Hover text for location images */
+.location-image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.location-hover-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-playfair);
+  font-weight: 700;
+  font-size: 8rem;
+  color: var(--background);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  mix-blend-mode: overlay;
+  background-clip: text;
+  -webkit-background-clip: text;
+  z-index: 20;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+  letter-spacing: -0.05em;
+}
+
+.location-image-container:hover .location-hover-text {
+  opacity: 0.9;
+}
+
+@media (max-width: 640px) {
+  .location-hover-text {
+    font-size: 5rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .location-hover-text {
+    font-size: 6rem;
+  }
 }

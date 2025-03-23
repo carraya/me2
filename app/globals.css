@@ -13,14 +13,6 @@
   /* Increased footer height */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground: #353534;
-    --background: #000;
-    --border-color: rgba(53, 53, 52, 0.2);
-  }
-}
-
 /* Custom cursor styling */
 body {
   cursor: none;

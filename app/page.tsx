@@ -109,9 +109,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-
-        {/* Bottom full-width dotted line container */}
-        <div className="full-width-border bottom-0"></div>
       </div>
     </main >
   );

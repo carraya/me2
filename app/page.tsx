@@ -8,7 +8,6 @@ export default function Home() {
   const revealContainerRef = useRef<HTMLDivElement>(null);
   const [activeReveal, setActiveReveal] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
 
   // Function to adjust container height based on content and screen size
   const adjustContainerHeight = () => {
@@ -73,7 +72,6 @@ export default function Home() {
 
       animationFrameId = requestAnimationFrame(() => {
         const scrollY = window.scrollY;
-        setLastScrollY(scrollY);
 
         // Read from DOM once
         const containerRect = revealContainer.getBoundingClientRect();

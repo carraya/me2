@@ -1,26 +1,206 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --foreground: #353534;
+  --background: #F6F5F1;
+  --border-color: rgba(53, 53, 52, 0.2);
+  --border-width: 1px;
+  --border-margin: 2rem;
+  /* ~1 inch from edge */
+  --nav-height: 3.5rem;
+  /* Height of navigation */
+  --footer-height: 48rem;
+  /* Increased footer height */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground: #353534;
+    --background: #000;
+    --border-color: rgba(53, 53, 52, 0.2);
   }
 }
 
+/* Custom cursor styling */
 body {
-  background: var(--background);
+  cursor: none;
+}
+
+a,
+button,
+input,
+select,
+textarea {
+  cursor: none;
+}
+
+#paper-airplane-cursor {
+  /* Base styles handled in component */
+}
+
+#paper-airplane-cursor[data-hovering="true"] path:first-child {
+  fill: #353534;
+}
+
+body {
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--background);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main border container */
+.border-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Center rectangle */
+.border-container::before {
+  content: '';
+  position: absolute;
+  top: var(--nav-height);
+  right: var(--border-margin);
+  bottom: var(--footer-height);
+  left: var(--border-margin);
+  border: var(--border-width) dashed var(--border-color);
+}
+
+/* Horizontal and vertical lines */
+.border-line {
+  position: absolute;
+  border: 0 dashed var(--border-color);
+}
+
+/* Top horizontal lines */
+.border-line-top-left {
+  top: var(--nav-height);
+  left: 0;
+  width: var(--border-margin);
+  height: var(--border-width);
+  border-top-width: var(--border-width);
+}
+
+.border-line-top-right {
+  top: var(--nav-height);
+  right: 0;
+  width: var(--border-margin);
+  height: var(--border-width);
+  border-top-width: var(--border-width);
+}
+
+/* Bottom horizontal lines */
+.border-line-bottom-left {
+  bottom: var(--footer-height);
+  left: 0;
+  width: var(--border-margin);
+  height: var(--border-width);
+  border-bottom-width: var(--border-width);
+}
+
+.border-line-bottom-right {
+  bottom: var(--footer-height);
+  right: 0;
+  width: var(--border-margin);
+  height: var(--border-width);
+  border-bottom-width: var(--border-width);
+}
+
+/* Left vertical lines */
+.border-line-left-top {
+  top: 0;
+  left: var(--border-margin);
+  width: var(--border-width);
+  height: var(--nav-height);
+  border-left-width: var(--border-width);
+}
+
+.border-line-left-bottom {
+  bottom: 0;
+  left: var(--border-margin);
+  width: var(--border-width);
+  height: var(--footer-height);
+  border-left-width: var(--border-width);
+}
+
+/* Right vertical lines */
+.border-line-right-top {
+  top: 0;
+  right: var(--border-margin);
+  width: var(--border-width);
+  height: var(--nav-height);
+  border-right-width: var(--border-width);
+}
+
+.border-line-right-bottom {
+  bottom: 0;
+  right: var(--border-margin);
+  width: var(--border-width);
+  height: var(--footer-height);
+  border-right-width: var(--border-width);
+}
+
+/* Footer image fade effect */
+.footer-bg {
+  position: relative;
+  background-position: 20% center !important;
+  /* Show more right side on mobile */
+}
+
+.footer-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--background) 0%, rgba(255, 255, 255, 0) 100%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+@media (min-width: 640px) {
+  .footer-bg {
+    background-position: 30% center !important;
+    /* Adjust for medium screens */
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-bg {
+    background-position: center center !important;
+    /* Center on large screens */
+  }
+}
+
+/* Trail dot styles */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+/* Trail segment styles - make sure it's visible */
+.trail-segment {
+  position: fixed;
+  height: 2px;
+  /* increased height for better visibility */
+  background: none;
+  border-top: 1px dashed #35353433;
+  /* explicit width and color */
+  pointer-events: none;
+  z-index: 9998;
+  animation: fadeOut 3s forwards;
+}
+
+/* Make sure the cursor styles remain at the top priority */
+#paper-airplane-cursor {
+  z-index: 9999 !important;
 }

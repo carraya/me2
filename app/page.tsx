@@ -8,6 +8,7 @@ export default function Home() {
   const revealContainerRef = useRef<HTMLDivElement>(null);
   const [activeReveal, setActiveReveal] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   // Function to adjust container height based on content and screen size
   const adjustContainerHeight = () => {
@@ -79,9 +80,9 @@ export default function Home() {
         const viewportHeight = window.innerHeight;
         const distanceFromViewport = containerTop - scrollY;
 
-        // Update container visibility state
+        // Update container visibility state - but skip during initial page load
         const isActive = distanceFromViewport < viewportHeight;
-        if (isActive !== activeReveal) {
+        if (isActive !== activeReveal && !isInitialLoad) {
           setActiveReveal(isActive);
         }
 
@@ -118,7 +119,12 @@ export default function Home() {
 
     // Initial setup
     chars.forEach(char => char.classList.remove('visible'));
-    handleScroll();
+
+    // Set initial state based on actual scroll position without affecting it
+    setTimeout(() => {
+      handleScroll();
+      setIsInitialLoad(false); // Mark initial load complete after first scroll handling
+    }, 100);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -128,7 +134,7 @@ export default function Home() {
         cancelAnimationFrame(animationFrameId);
       }
     };
-  }, [isMobile, activeReveal]); // Include activeReveal to avoid stale closure issues
+  }, [isMobile, activeReveal, isInitialLoad]); // Added isInitialLoad to deps
 
   // Function to prepare text by wrapping each word in a span
   const prepareText = (text: string) => {
@@ -159,110 +165,92 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col pt-6 sm:pt-8 md:pt-12 px-4 sm:px-8 md:px-12">
-      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-[family-name:var(--font-playfair)] leading-tight sm:leading-tight md:leading-relaxed max-w-[90%] md:max-w-[80%] lg:max-w-[70%] font-medium">
-        <span className="font-extrabold">Chris</span> is a Morehead-Cain scholar building the <em>future of living</em> in San Francisco and New York.
-      </h1>
+    <main className="min-h-screen flex flex-col pt-6 sm:pt-8 md:pt-12">
+      <div className="w-full px-4 sm:px-8 md:px-12">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-[family-name:var(--font-playfair)] leading-tight sm:leading-tight md:leading-relaxed max-w-[90%] md:max-w-[80%] lg:max-w-[70%] font-medium">
+          <span className="font-extrabold">Chris</span> is a Morehead-Cain scholar building the <em>future of living</em> in San Francisco and New York.
+        </h1>
 
-      {/* Contact buttons */}
-      <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8 mt-8 sm:mt-10 md:mt-14 self-start">
-        <a
-          href="mailto:arraya.christopher@gmail.com"
-          className="inline-block w-full sm:w-auto px-4 sm:px-5 md:px-7 py-2 sm:py-2.5 md:py-3 border border-dashed border-[#35353433] hover:bg-[#35353408] text-center font-medium tracking-wider text-[#353534bb] text-sm sm:text-base transition-all duration-300 hover:-translate-y-0.5"
-        >
-          CONTACT ME
-        </a>
-        <a
-          href="https://x.com/cjarrayadev"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block w-full sm:w-auto px-4 sm:px-5 md:px-7 py-2 sm:py-2.5 md:py-3 border border-dashed border-[#35353433] hover:bg-[#35353408] text-center font-medium tracking-wider text-[#353534bb] text-sm sm:text-base transition-all duration-300 hover:-translate-y-0.5"
-        >
-          TWITTER
-        </a>
-        <a
-          href="https://www.linkedin.com/in/cjarraya"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block w-full sm:w-auto px-4 sm:px-5 md:px-7 py-2 sm:py-2.5 md:py-3 border border-dashed border-[#35353433] hover:bg-[#35353408] text-center font-medium tracking-wider text-[#353534bb] text-sm sm:text-base transition-all duration-300 hover:-translate-y-0.5"
-        >
-          LINKEDIN
-        </a>
+
+        {/* Contact buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8 mt-8 sm:mt-10 md:mt-14 self-start">
+          <a
+            href="mailto:arraya.christopher@gmail.com"
+            className="inline-block w-full sm:w-auto px-4 sm:px-5 md:px-7 py-2 sm:py-2.5 md:py-3 border border-dashed border-[#35353433] hover:bg-[#35353408] text-center font-medium tracking-wider text-[#353534bb] text-sm sm:text-base transition-all duration-300 hover:-translate-y-0.5"
+          >
+            CONTACT ME
+          </a>
+          <a
+            href="/blog"
+            className="inline-block w-full sm:w-auto px-4 sm:px-5 md:px-7 py-2 sm:py-2.5 md:py-3 border border-dashed border-[#35353433] hover:bg-[#35353408] text-center font-medium tracking-wider text-[#353534bb] text-sm sm:text-base transition-all duration-300 hover:-translate-y-0.5"
+          >
+            BLOG
+          </a>
+          <a
+            href="https://x.com/cjarrayadev"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block w-full sm:w-auto px-4 sm:px-5 md:px-7 py-2 sm:py-2.5 md:py-3 border border-dashed border-[#35353433] hover:bg-[#35353408] text-center font-medium tracking-wider text-[#353534bb] text-sm sm:text-base transition-all duration-300 hover:-translate-y-0.5"
+          >
+            TWITTER
+          </a>
+          <a
+            href="https://www.linkedin.com/in/cjarraya"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block w-full sm:w-auto px-4 sm:px-5 md:px-7 py-2 sm:py-2.5 md:py-3 border border-dashed border-[#35353433] hover:bg-[#35353408] text-center font-medium tracking-wider text-[#353534bb] text-sm sm:text-base transition-all duration-300 hover:-translate-y-0.5"
+          >
+            LINKEDIN
+          </a>
+        </div>
       </div>
 
       {/* Three images in a row with border top and bottom */}
-      <div className="w-full mt-12 sm:mt-16 md:mt-20 lg:mt-24 relative pb-8">
+      <div className="w-full mt-12 sm:mt-16 md:mt-20 lg:mt-24 relative px-0">
         {/* Top full-width dotted line container */}
         <div className="full-width-border"></div>
 
         {/* Image grid container */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
           {/* UNC Image */}
           <div className="relative flex flex-col">
-            <div className="relative aspect-square sm:aspect-[4/3] overflow-hidden rounded-sm location-image-container">
+            <div className="relative aspect-square md:aspect-[4/3] overflow-hidden location-image-container">
               <Image
                 src="/unc.png"
                 alt="UNC Chapel Hill campus"
                 fill
-                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-cover"
               />
               <div className="location-hover-text">CH</div>
-              <div className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: `
-                       radial-gradient(ellipse at center, transparent 90%, var(--background) 100%),
-                       linear-gradient(to top, var(--background), transparent 10%, transparent 90%, var(--background)),
-                       linear-gradient(to left, var(--background), transparent 10%, transparent 90%, var(--background))
-                     `
-                }}>
-              </div>
             </div>
           </div>
 
           {/* Golden Gate Image */}
           <div className="relative flex flex-col">
-            <div className="relative aspect-square sm:aspect-[4/3] overflow-hidden rounded-sm location-image-container">
+            <div className="relative aspect-square md:aspect-[4/3] overflow-hidden location-image-container">
               <Image
                 src="/goldengate.png"
                 alt="Golden Gate Bridge above the clouds"
                 fill
-                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-cover"
               />
               <div className="location-hover-text">SF</div>
-              <div className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: `
-                       radial-gradient(ellipse at center, transparent 90%, var(--background) 100%),
-                       linear-gradient(to top, var(--background), transparent 10%, transparent 90%, var(--background)),
-                       linear-gradient(to left, var(--background), transparent 10%, transparent 90%, var(--background))
-                     `
-                }}>
-              </div>
             </div>
           </div>
 
           {/* NYC Image */}
           <div className="relative flex flex-col">
-            <div className="relative aspect-square sm:aspect-[4/3] overflow-hidden rounded-sm location-image-container">
+            <div className="relative aspect-square md:aspect-[4/3] overflow-hidden location-image-container">
               <Image
                 src="/nyc.png"
                 alt="New York City skyline"
                 fill
-                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-cover"
               />
               <div className="location-hover-text">NYC</div>
-              <div className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: `
-                       radial-gradient(ellipse at center, transparent 90%, var(--background) 100%),
-                       linear-gradient(to top, var(--background), transparent 10%, transparent 90%, var(--background)),
-                       linear-gradient(to left, var(--background), transparent 10%, transparent 90%, var(--background))
-                     `
-                }}>
-              </div>
             </div>
           </div>
         </div>
@@ -290,6 +278,102 @@ export default function Home() {
             in criminal justice and society.
 
             Now, I'm trying to build the future of living. A residence that lives, breathes, and provides for you.`)}
+          </div>
+        </div>
+      </div>
+
+      {/* Writings Section */}
+      <div className="w-full">
+        <div className="w-full px-4 sm:px-8 md:px-12">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-[family-name:var(--font-playfair)] font-medium ">
+            <span className="font-extrabold">Writings</span>
+          </h2>
+        </div>
+        <div className="w-full mt-8 sm:mt-10 md:mt-12 relative">
+          <div className="full-width-border"></div>
+        </div>
+        {/* Writing items container */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+          {/* Writing Item 1 */}
+          <div className="group writing-item">
+            <a href="/blog/introduction" className="block">
+              <div className="flex flex-col h-full">
+                {/* Add image preview */}
+                <div className="relative aspect-[3/2] mb-4 overflow-hidden w-full">
+                  <div className="absolute inset-0 bg-[#f8f8f8] flex items-center justify-center">
+                    <Image src="/introduction.png" alt="Introduction" fill className="object-cover" />
+                  </div>
+                </div>
+                <div className="p-3 sm:p-5 md:p-6 lg:p-8">
+                  <div className="flex flex-col sm:flex-col lg:flex-row lg:items-baseline lg:justify-between">
+                    <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-medium group-hover:underline underline-offset-4 pr-2 lg:pr-4">
+                      Introduction
+                    </h3>
+                    <span className="text-xs sm:text-sm text-[#353534aa] whitespace-nowrap mt-1 lg:mt-0">November 30, 2024</span>
+                  </div>
+                  <p className="mt-2 sm:mt-3 text-[#353534cc] text-xs sm:text-sm md:text-base line-clamp-2 sm:line-clamp-3 flex-grow leading-snug sm:leading-normal">
+                    An introduction to my journey and story.
+                  </p>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          {/* Writing Item 2 */}
+          <div className="group writing-item">
+            <a href="/blog/prelude" className="block">
+              <div className="flex flex-col h-full">
+                {/* Add image preview */}
+                <div className="relative aspect-[3/2] mb-4 overflow-hidden w-full">
+                  <div className="absolute inset-0 bg-[#f8f8f8] flex items-center justify-center">
+                    <Image src="/prelude.png" alt="Prelude" fill className="object-cover" />
+                  </div>
+                </div>
+                <div className="p-3 sm:p-5 md:p-6 lg:p-8">
+                  <div className="flex flex-col sm:flex-col lg:flex-row lg:items-baseline lg:justify-between">
+                    <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-medium group-hover:underline underline-offset-4 pr-2 lg:pr-4">
+                      Prelude
+                    </h3>
+                    <span className="text-xs sm:text-sm text-[#353534aa] whitespace-nowrap mt-1 lg:mt-0">February 11, 2025</span>
+                  </div>
+                  <p className="mt-2 sm:mt-3 text-[#353534cc] text-xs sm:text-sm md:text-base line-clamp-2 sm:line-clamp-3 flex-grow leading-snug sm:leading-normal">
+                    A prelude to my journey and story.
+                  </p>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          {/* Writing Item 3 */}
+          <div className="group writing-item">
+            <a href="/blog/act-one" className="block">
+              <div className="flex flex-col h-full">
+                {/* Add image preview */}
+                <div className="relative aspect-[3/2] mb-4 overflow-hidden w-full">
+                  <div className="absolute inset-0 bg-[#f8f8f8] flex items-center justify-center">
+                    <Image src="/act-one.png" alt="Act I" fill className="object-cover" />
+                  </div>
+                </div>
+                <div className="p-3 sm:p-5 md:p-6 lg:p-8">
+                  <div className="flex flex-col sm:flex-col lg:flex-row lg:items-baseline lg:justify-between">
+                    <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-medium group-hover:underline underline-offset-4 pr-2 lg:pr-4">
+                      Act I
+                    </h3>
+                    <span className="text-xs sm:text-sm text-[#353534aa] whitespace-nowrap mt-1 lg:mt-0">March 2025</span>
+                  </div>
+                  <p className="mt-2 sm:mt-3 text-[#353534cc] text-xs sm:text-sm md:text-base line-clamp-2 sm:line-clamp-3 flex-grow leading-snug sm:leading-normal">
+                    The first act of my journey and story.
+                  </p>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          {/* Add placeholder for 2-column layout */}
+          <div className="writing-item hidden sm:flex md:hidden items-center justify-center">
+            <div className="p-3 sm:p-5 md:p-6 lg:p-8 flex items-center justify-center h-full">
+              <p className="text-[#35353466] text-xs sm:text-sm md:text-base italic">More soon...</p>
+            </div>
           </div>
         </div>
       </div>

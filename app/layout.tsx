@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Playfair_Display } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 import CustomCursor from "./components/CustomCursor";
 
@@ -42,7 +43,9 @@ export default function RootLayout({
               <a href="/about" className="hover:opacity-70 transition-opacity">About</a>
               <a href="/projects" className="hover:opacity-70 transition-opacity">Projects</a>
               <a href="/contact" className="hover:opacity-70 transition-opacity">Contact</a> */}
-              <h1 className="text-lg sm:text-xl md:text-2xl font-bold font-[family-name:var(--font-playfair)] z-10 text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-full">CHRISTOPHER JAIME ARRAYA</h1>
+              <Link href="/">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold font-[family-name:var(--font-playfair)] z-10 text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-full">CHRISTOPHER JAIME ARRAYA</h1>
+              </Link>
             </div>
           </nav>
 

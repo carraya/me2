@@ -386,3 +386,215 @@ body {
   /* Transition to this color */
   opacity: 1;
 }
+
+/* Writing items with borders */
+.writing-item {
+  position: relative;
+}
+
+.writing-item:hover {
+  background-color: rgba(53, 53, 52, 0.02);
+}
+
+/* Remove right border for items in the third column (on desktop) */
+.writing-item.md\:border-r-0::after {
+  display: none;
+}
+
+/* Vertical borders for horizontal layout (medium screens and up) */
+@media (min-width: 768px) {
+  .writing-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    border-right: var(--border-width) dashed var(--border-color);
+  }
+
+  /* Ensure grid container has height that allows borders to extend fully */
+  .grid.relative {
+    position: relative;
+    height: 100%;
+    min-height: 100%;
+  }
+}
+
+/* Horizontal borders for small screens (vertical layout) */
+@media (max-width: 767px) {
+  .writing-item:not(:last-child) {
+    position: relative;
+  }
+
+  .writing-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: var(--border-width) dashed var(--border-color);
+  }
+}
+
+/* For medium screens with 2 columns */
+@media (min-width: 640px) and (max-width: 767px) {
+
+  /* Every odd item except the last (or second last if total is even) gets a right border */
+  .writing-item:nth-child(odd):not(:nth-last-child(-n+1))::after,
+  .writing-item:nth-child(odd):not(:nth-last-child(1))::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    border-right: var(--border-width) dashed var(--border-color);
+    border-bottom: none;
+    left: auto;
+    width: auto;
+  }
+
+  /* Every even item gets a bottom border except the last */
+  .writing-item:nth-child(even):not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: var(--border-width) dashed var(--border-color);
+    top: auto;
+    right: auto;
+    height: auto;
+    border-right: none;
+  }
+}
+
+/* Blog specific styles */
+.grid.relative .writing-item {
+  position: relative;
+  height: 100%;
+}
+
+/* Remove the right border from every third item in medium screens and larger */
+@media (min-width: 768px) {
+  .grid.relative .writing-item:nth-child(3n)::after {
+    display: none;
+  }
+
+  /* Ensure vertical borders extend to the full height of the container */
+  .grid.relative .writing-item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    border-right: var(--border-width) dashed var(--border-color);
+  }
+
+  /* Add horizontal borders for the bottom row items */
+  .grid.relative .writing-item:nth-last-child(-n+3):not(:last-child)::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: none;
+  }
+}
+
+/* Blog grid specific styles */
+@media (min-width: 768px) {
+
+  /* Reset existing styling for grid items to prevent conflicts */
+  .grid.relative .writing-item::after,
+  .grid.relative .writing-item::before {
+    display: none;
+  }
+
+  /* Add vertical lines between columns */
+  .grid.relative .writing-item:not(:nth-child(3n))::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    border-right: var(--border-width) dashed var(--border-color);
+    display: block;
+  }
+
+  /* Add horizontal lines between rows - target every item except the last row */
+  .grid.relative .writing-item:nth-last-child(n+4)::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: var(--border-width) dashed var(--border-color);
+    display: block;
+  }
+}
+
+/* Ensure all items have bottom borders on small screens except the last one */
+@media (max-width: 767px) {
+  .grid.relative .writing-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: var(--border-width) dashed var(--border-color);
+    display: block;
+  }
+}
+
+/* Blog post styles */
+.prose {
+  --tw-prose-body: #353534;
+  --tw-prose-headings: #1f1f1f;
+  --tw-prose-lead: #525252;
+  --tw-prose-links: #111827;
+  --tw-prose-bold: #111827;
+  --tw-prose-counters: #6b7280;
+  --tw-prose-bullets: #d1d5db;
+  --tw-prose-hr: #e5e7eb;
+  --tw-prose-quotes: #111827;
+  --tw-prose-quote-borders: #e5e7eb;
+  --tw-prose-captions: #6b7280;
+  --tw-prose-code: #111827;
+  --tw-prose-pre-code: #e5e7eb;
+  --tw-prose-pre-bg: #1f2937;
+  --tw-prose-th-borders: #d1d5db;
+  --tw-prose-td-borders: #e5e7eb;
+}
+
+.prose h2 {
+  font-family: var(--font-playfair);
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
+  font-weight: 600;
+}
+
+.prose p {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  line-height: 1.75;
+}
+
+.prose a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  text-decoration-color: #35353466;
+  transition: text-decoration-color 0.2s;
+}
+
+.prose a:hover {
+  text-decoration-color: #353534;
+}
+
+.prose blockquote {
+  font-style: italic;
+  border-left: 2px dashed #35353433;
+  padding-left: 1rem;
+  margin-left: 1rem;
+  color: #525252;
+}

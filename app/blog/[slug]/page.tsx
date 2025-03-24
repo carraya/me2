@@ -76,15 +76,15 @@ const blogPosts = [
     date: "February 11, 2025",
     excerpt: "A prelude to my journey and story.",
     content: `
-      <p>My dad came to the U.S. as a kid from Bolivia, but only because my grandfather got here first. He worked in restaurants—busboy, waiter, whatever he could find—saving up to bring his family over legally. When my dad arrived, he started school in Virginia, learned English, and at 23, got a temp job at a transportation company. They hired him full-time.</p>
+      <p>My dad came to the U.S. as a kid from Bolivia, but only because my grandfather got here first. He (my abuelo) worked in restaurants—busboy, waiter, etc.—saving up to bring his family over legally. When my dad arrived, he started school in Virginia, learned English, and at 23, got a temp job at a transportation company. They hired him full-time.</p>
 
-      <p>He never left that industry. When money was tight after I was born, he built something on the side. A second job. Late nights, early mornings. He made it work because he had to.</p>
+      <p>He never left that industry. When we needed more money after I was born, he built something on the side. A second job. Late nights, early mornings. He made it work because he had to.</p>
 
       <p>My mom grew up here, but her parents were born in Bolivia. She stayed home to raise me—not because it was easy, but because she believed it was the best way to keep me on track. No gaps in the schedule. No chance to slip. If I wasn't in school, I was home.</p>
 
-      <p>We started in an apartment. Then my abuelo's house. Then a townhouse. Now a house.</p>
+      <p>We started in an apartment. Then my Abuelos' house. Then a townhouse. Now a house.</p>
 
-      <p>I don't <b>have</b> to build something out of struggle. I don't <b>have</b> to work two jobs or stay up past midnight. That's the difference. That's the foundation they gave me. And with that foundation, I <b>choose</b> to work as hard as I can.</p>
+      <p><b>I don't have to</b> build something out of struggle. <b>I don't have to</b> work two jobs or stay up past midnight. That's the difference. That's the foundation they gave me. And with that foundation, I <b>choose</b> to work as hard as I can.</p>
 
       <p>Before this is my story, <b>it's theirs.</b></p>
     `,

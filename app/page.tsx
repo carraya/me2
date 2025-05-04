@@ -280,17 +280,106 @@ export default function Home() {
             Now, I'm trying to build the future of living. A residence that lives, breathes, and provides for you.`)}
           </div>
         </div>
+        <div className="full-width-border bottom-0"></div>
+      </div>
+
+      {/* Mini Story Section */}
+      <div className="w-full mt-16 sm:mt-20 md:mt-24 lg:mt-28 relative">
+        <div className="full-width-border bottom-0"></div>
+        {/* Philosopher Story - Image Right */}
+        <div className="flex flex-col-reverse md:flex-row">
+          <div className="w-full md:w-1/2 p-6 sm:p-8 md:p-10 lg:p-16 flex flex-col justify-center">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-[#353534] mb-4">
+              Back in the era of Socrates and Plato, philosophy wasn't a luxury—it was a discipline rooted in time. Time to think deeply. To question assumptions. To imagine futures no one else could yet see.
+            </p>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-[#353534] mb-4">
+              Today, that kind of time still exists—but it's mostly reserved for the powerful. The ones who aren't caught in the cycle of reacting, but instead get to predict, plan, and build what comes next.
+            </p>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-[#353534]">
+              They don't wait for the future. They shape it in advance.
+            </p>
+          </div>
+          <div className="w-full md:w-1/2 p-4 sm:p-6 md:p-8 flex items-center justify-center">
+            <div className="relative w-full h-[300px] sm:h-[400px] md:h-[450px] max-w-[500px]">
+              <Image
+                src="/philosopher.png"
+                alt="Ancient philosopher illustration"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-contain"
+                priority
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Brain Story - Image Left */}
+        <div className="flex flex-col md:flex-row">
+          <div className="w-full md:w-1/2 p-4 sm:p-6 md:p-8 flex items-center justify-center">
+            <div className="relative w-full h-[300px] sm:h-[400px] md:h-[450px] max-w-[500px]">
+              <Image
+                src="/brain.png"
+                alt="Human brain illustration"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-contain"
+                priority
+              />
+            </div>
+          </div>
+          <div className="w-full md:w-1/2 p-6 sm:p-8 md:p-10 lg:p-16 flex flex-col justify-center">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-[#353534] mb-4">
+              Spend time around founders, visionaries, or the truly wealthy, and you'll notice something: they think in decades, not days.
+            </p>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-[#353534] mb-4">
+              Their greatest asset isn't capital—it's cognitive space. The ability to zoom out, to place bets on long arcs, to think clearly without noise.
+            </p>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-[#353534]">
+              And increasingly, that thinking leads to one conclusion:
+              In the AI economy, ownership is everything.
+            </p>
+          </div>
+        </div>
+
+        {/* Clock Story - Image Right */}
+        <div className="flex flex-col-reverse md:flex-row">
+          <div className="w-full md:w-1/2 p-6 sm:p-8 md:p-10 lg:p-16 flex flex-col justify-center">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-[#353534] mb-4">
+              As automation replaces tasks and decisions, labor loses leverage. But equity doesn't.
+            </p>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-[#353534] mb-4">
+              In a world where AI builds, decides, and scales faster than any human ever could, the real question becomes:
+              What do you own?
+            </p>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-[#353534]">
+              If more of us had the time to ask that question—and the space to act on the answer—maybe we wouldn't just keep up with the future.
+              Maybe we'd lead it.
+            </p>
+          </div>
+          <div className="w-full md:w-1/2 p-4 sm:p-6 md:p-8 flex items-center justify-center">
+            <div className="relative w-full h-[300px] sm:h-[400px] md:h-[450px] max-w-[500px]">
+              <Image
+                src="/clock.png"
+                alt="Vintage clock illustration"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-contain"
+                priority
+              />
+            </div>
+          </div>
+        </div>
+
       </div>
 
       {/* Writings Section */}
-      <div className="w-full">
+      <div className="w-full mt-8 sm:mt-10 md:mt-12">
         <div className="w-full px-4 sm:px-8 md:px-12">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-[family-name:var(--font-playfair)] font-medium ">
             <span className="font-extrabold">Writings</span>
           </h2>
         </div>
         <div className="w-full mt-8 sm:mt-10 md:mt-12 relative">
-          <div className="full-width-border"></div>
         </div>
         {/* Writing items container */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
@@ -377,6 +466,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </main>
+    </main >
   );
 }
